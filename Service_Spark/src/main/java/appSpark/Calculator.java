@@ -1,0 +1,64 @@
+package appSpark;
+
+import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaRDD;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import static com.datastax.spark.connector.japi.CassandraJavaUtil.mapColumnTo;
+import org.apache.spark.SparkConf;
+import com.datastax.spark.connector.japi.CassandraJavaUtil;
+import org.apache.spark.mllib.fpm.AssociationRules;
+import org.apache.spark.mllib.fpm.FPGrowth;
+import org.apache.spark.mllib.fpm.FPGrowthModel;
+
+
+@Component
+public class Calculator {
+  //  @Autowired
+   // private SparkSession sparkSession;
+
+
+    public String count() {
+
+        String frequentElement="";
+
+        SparkConf sparkConf = new SparkConf()
+                .setAppName("alo")
+                //.setSparkHome("ll")
+                .setMaster("local[*]")
+                .set("spark.cassandra.connection.host", "127.0.0.1");
+
+        SparkContext sc = new SparkContext(sparkConf);
+
+        JavaRDD<String> data = CassandraJavaUtil.javaFunctions(sc)
+                .cassandraTable("javasampleapproach", "produit", mapColumnTo(String.class))
+        .select("nameproduit");
+
+        JavaRDD<List<String>> transactions = data.map(line -> Arrays.asList(line.split(" ")));
+
+        FPGrowth fpg = new FPGrowth()
+                .setMinSupport(0.2)
+                .setNumPartitions(10);
+        FPGrowthModel<String> model = fpg.run(transactions);
+
+        for (FPGrowth.FreqItemset<String> itemset: model.freqItemsets().toJavaRDD().collect()) {
+            System.out.println("[" + itemset.javaItems() + "], " + itemset.freq());
+            frequentElement+= itemset.javaItems()+": "+itemset.freq()+ System.getProperty("line.separator");
+        }
+        System.out.println(frequentElement);
+        double minConfidence = 0.8;
+        for (AssociationRules.Rule<String> rule
+                : model.generateAssociationRules(minConfidence).toJavaRDD().collect()) {
+            System.out.println(
+                    rule.javaAntecedent() + " => " + rule.javaConsequent() + ", " + rule.confidence());
+        }
+
+
+        sc.stop();
+
+        return frequentElement ;
+    }
+}
