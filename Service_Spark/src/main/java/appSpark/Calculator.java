@@ -26,12 +26,9 @@ public class Calculator {
 
         String frequentElement="";
 
-        SparkConf sparkConf = new SparkConf()
-                .setAppName("alo")
-                .setMaster("local[2]")
-                .set("spark.cassandra.connection.host", "127.0.0.1");
+        ApplicationConfig appConfig= new ApplicationConfig();
 
-        SparkContext sc = new SparkContext(sparkConf);
+        SparkContext sc = appConfig.javaSparkContext();
 
         JavaRDD<String> data = CassandraJavaUtil.javaFunctions(sc)
                 .cassandraTable("javasampleapproach", "produit", mapColumnTo(String.class))
@@ -57,7 +54,7 @@ public class Calculator {
         }
 
 
-       // sc.stop();
+         sc.stop();
 
         return frequentElement ;
     }

@@ -1,64 +1,46 @@
-/*
-
+package appSpark;
 
 import org.apache.spark.SparkConf;
+import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.env.Environment;
 
 
 
-@Configuration
-@PropertySource("classpath:application.properties")
 public class ApplicationConfig {
 
-    @Autowired
-    private Environment env;
+    public  SparkConf sparkConf;
 
-    @Value("${app.name:test}")
-    private String appName;
+    public ApplicationConfig() {
 
-    @Value("${spark.home}")
-    private String sparkHome;
+        if(this.sparkConf==null) {
+            sparkConf();
+        }
+    }
 
-    @Value("${master.uri:local}")
-    private String masterUri;
+    public void sparkConf() {
 
-    @Bean
-    public SparkConf sparkConf() {
         SparkConf sparkConf = new SparkConf()
-                .setAppName(appName)
-                .setSparkHome(sparkHome)
-                .setMaster(masterUri)
-                .set("spark.cassandra.connection.host", "127.0.0.1:9042");
+                .setAppName("alo")
+                //Run Spark locally with 2 worker threads
+                .setMaster("local[2]")
+                .set("spark.cassandra.connection.host", "127.0.0.1");
 
-
-        return sparkConf;
+         this.sparkConf=sparkConf;
     }
+
 
     @Bean
-    public JavaSparkContext javaSparkContext() {
-        return new JavaSparkContext(sparkConf());
+    public SparkContext javaSparkContext() {
+        return new SparkContext(this.sparkConf);
     }
 
-    @Bean
-    public SparkSession sparkSession() {
-        return SparkSession
-                .builder()
-                .sparkContext(javaSparkContext().sc())
-                .appName("Java Spark SQL basic example")
-                .getOrCreate();
-    }
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
-}*/
+}
