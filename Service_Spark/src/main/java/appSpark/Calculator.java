@@ -20,6 +20,7 @@ public class Calculator {
   //  @Autowired
    // private SparkSession sparkSession;
 
+//
 
     public String count() {
 
@@ -27,8 +28,7 @@ public class Calculator {
 
         SparkConf sparkConf = new SparkConf()
                 .setAppName("alo")
-                //.setSparkHome("ll")
-                .setMaster("local[*]")
+                .setMaster("local[2]")
                 .set("spark.cassandra.connection.host", "127.0.0.1");
 
         SparkContext sc = new SparkContext(sparkConf);
@@ -57,7 +57,7 @@ public class Calculator {
         }
 
 
-        sc.stop();
+       // sc.stop();
 
         return frequentElement ;
     }
