@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 public class DemoApplication {
 
 
-	public static final String REST_SERVICE_URI="http://localhost:8090";
+	public static final String REST_SERVICE_URI="http://192.168.56.101:8090";
 
 
 	/* POST */
