@@ -17,13 +17,13 @@ import org.apache.spark.mllib.fpm.FPGrowthModel;
 
 @Component
 public class Calculator {
-  //  @Autowired
-   // private SparkSession sparkSession;
 
-//
 
+    //UTILISATION DE L'ALGORITHME FPGROWTH SELON LA SOURCE :
+    //https://spark.apache.org/docs/latest/mllib-frequent-pattern-mining.html
     public String count() {
 
+        //les éléments les plus fréquents seront ajouter a cette String
         String frequentElement="";
 
         ApplicationConfig appConfig= new ApplicationConfig();

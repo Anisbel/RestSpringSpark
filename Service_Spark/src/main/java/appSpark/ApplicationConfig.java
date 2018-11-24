@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 
-
+//Classe servant a la Configuration de Spark
 public class ApplicationConfig {
 
     public  SparkConf sparkConf;

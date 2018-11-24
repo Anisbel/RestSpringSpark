@@ -27,6 +27,7 @@ public class RestApiController {
 
     public static String REST_SERVICE_SPARK = "http://localhost:8080";
 
+    //fonction appelé par le client. Sauvegarde des produits dans la BD en lui fournissant des ID unique
     @PostMapping("/api/genererProduits")
     public ResponseEntity<String> createFactureWithProduct( @RequestBody Produit produit) {
 
@@ -39,7 +40,7 @@ public class RestApiController {
 
     }
 
-
+    //fonction appelé par le client. Sauvegarde une facture dans la BD en lui fournissant un ID unique
     @PostMapping("/api/genererFacture")
     public Facture createFacture(@RequestBody Facture facture) {
 
@@ -50,7 +51,8 @@ public class RestApiController {
 
     }
 
-
+    // Fonction appelé par le client. Elle fait un appel Rest au serviceSpark pour connaitres les éléments les plus fréquents.
+    // Elle retourne la réponse au client.
     @GetMapping("/api/produitFrequent")
     public ResponseEntity<String> getFrequentProduct() {
 

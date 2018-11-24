@@ -12,6 +12,7 @@ public class ApiController {
     @Autowired
     Calculator calculator;
 
+    //fonction appelé par le serviceRest. Elle appel la fonction calculator.count() pour retourner les éléments les plus fréquents.
     @RequestMapping("produitFrequent")
     public ResponseEntity<String> produitFrequent() {
         return new ResponseEntity<>(calculator.count(), HttpStatus.OK);
